@@ -9,7 +9,7 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 
 class Sprite {
-    constructor({position, velocity, color = 'red' }){
+    constructor({position, velocity, color = 'red', offset }){
         this.position = position
         this.velocity = velocity
         this.height = 150
@@ -20,6 +20,7 @@ class Sprite {
                 x: this.position.x,
                 y: this.position.y
             },
+            offset,
             width: 100,
             height: 50
         }
@@ -32,19 +33,20 @@ class Sprite {
     c.fillRect(this.position.x, this.position.y, this.width, this.height);
 
     //ATTACK BOX
-    //if (this.isAttaking) {
+    if (this.isAttaking) {
     c.fillStyle = 'green'
     c.fillRect(
         this.attackBox.position.x, 
         this.attackBox.position.y, 
         this.attackBox.width, 
         this.attackBox.height )
-      //  }
+        }
     }
 
     update(){
         this.draw()
-        this.attackBox.position.x = this.position.x
+        // hitbox segue o player
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y
         
         this.position.x += this.velocity.x;
@@ -70,6 +72,10 @@ const player = new Sprite({
     velocity: {
         x: 0,
         y: 0
+    },
+    offset: {
+        x: 0,
+        y: 0
     }
 })
 
@@ -82,7 +88,11 @@ const enemy = new Sprite({
         x: 0,
         y: 0
     },
-    color: 'blue'
+    color: 'blue',
+    offset: {
+        x: -50,
+        y: 0
+    }
 })
 
 console.log(player);
@@ -106,6 +116,14 @@ const keys = {
     ArrowUp: {
         pressed: false
     }
+}
+
+function retangularCollision({ retangle1, retangle2}) {
+    return (
+        retangle1.attackBox.position.y + retangle1.attackBox.height >= retangle2.position.y && 
+        retangle1.attackBox.position.x <= retangle2.position.x + retangle2.width && 
+        retangle1.attackBox.position.y <= retangle2.position.y + retangle2.height
+        )
 }
 
 function animate() {
@@ -133,13 +151,24 @@ function animate() {
     }
 
     // detecção de colisão
-    if (player.attackBox.position.x + player.attackBox.width >= enemy.position.x && 
-        player.attackBox.position.x <= enemy.position.x + enemy.width && 
-        player.attackBox.position.y + player.attackBox.height >= enemy.position.y && 
-        player.attackBox.position.y <= enemy.position.y + enemy.height &&
+    if ( 
+        retangularCollision({
+            retangle1: player,
+            retangle2: enemy
+        }) &&
         player.isAttaking) {
         player.isAttaking = false
-        console.log('go');
+        console.log('ataque do jogador');
+    }
+
+    if ( 
+        retangularCollision({
+            retangle1: enemy,
+            retangle2: player
+        }) &&
+        enemy.isAttaking) {
+        enemy.isAttaking = false
+        console.log('ataque do inimigo');
     }
 }
 
@@ -148,7 +177,7 @@ animate()
 
 
 window.addEventListener('keydown', (event) => {
-    console.log(event.key);
+
     switch (event.key) {
         case 'd':
             keys.d.pressed = true
@@ -176,8 +205,10 @@ window.addEventListener('keydown', (event) => {
         case 'ArrowUp':
             enemy.velocity.y = -20
             break
+        case 'ArrowDown':
+            enemy.isAttaking = true
+            break
     }
-    console.log(event.key);
 })
 
 window.addEventListener('keyup', (event) => {
@@ -205,5 +236,4 @@ window.addEventListener('keyup', (event) => {
             keys.ArrowUp.pressed = false
             break
     }
-    console.log(event.key);
 })
