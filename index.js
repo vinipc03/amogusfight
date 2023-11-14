@@ -120,8 +120,9 @@ const keys = {
 
 function retangularCollision({ retangle1, retangle2}) {
     return (
-        retangle1.attackBox.position.y + retangle1.attackBox.height >= retangle2.position.y && 
+        retangle1.attackBox.position.x + retangle1.attackBox.width >= retangle2.position.x &&
         retangle1.attackBox.position.x <= retangle2.position.x + retangle2.width && 
+        retangle1.attackBox.position.y + retangle1.attackBox.height >= retangle2.position.y && 
         retangle1.attackBox.position.y <= retangle2.position.y + retangle2.height
         )
 }
@@ -206,7 +207,7 @@ window.addEventListener('keydown', (event) => {
             enemy.velocity.y = -20
             break
         case 'ArrowDown':
-            enemy.isAttaking = true
+            enemy.attack()
             break
     }
 })
