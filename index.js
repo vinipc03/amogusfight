@@ -129,7 +129,7 @@ function retangularCollision({ retangle1, retangle2}) {
 }
 
 function determineWinner({player, enemy, timerId}) {
-    cancelTimeout(timerId)
+    clearTimeout(timerId)
     document.querySelector('#displayText').style.display = 'flex'
     if (player.health === enemy.health){
         document.querySelector('#displayText').innerHTML = 'EMPATE'
