@@ -45,6 +45,23 @@ const player = new Fighter({
     offset: {
         x: 215,
         y: 157
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/samuraiMack/Idle.png',
+            framesMax : 8
+        },
+        run: {
+            imageSrc: './img/samuraiMack/Run.png',
+            framesMax : 8,
+            
+        },
+        runl: { //TESTE
+            imageSrc: './img/samuraiMack/Runl.png',
+            framesMax : 8,
+            
+        }
+
     }
 })
 
@@ -101,21 +118,24 @@ function animate() { //função que cria animações e põe coisas na tela
     player.velocity.x = 0
     enemy.velocity.x = 0
     
-    //movimentação do jogador
+    //MOVIMENTAÇÃO DO JOGADOR
+    player.image = player.sprites.idle.image
     if (keys.a.pressed && player.lastKey === 'a') {
-        player.velocity.x = -5
+        player.velocity.x = -5 
+        player.image = player.sprites.runl.image //movimentação para esquerda
     }else if(keys.d.pressed && player.lastKey === 'd'){
         player.velocity.x = 5
+        player.image = player.sprites.run.image //movimentação para direita
     }
 
-    //movimentação do inimigo
+    //MOVIMENTAÇÃO DO INIMIGO
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5
     }else if(keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight'){
         enemy.velocity.x = 5
     }
 
-    // detecção de colisão
+    // DETECÇÃO DE COLISÃO
     if ( 
         retangularCollision({
             retangle1: player,
