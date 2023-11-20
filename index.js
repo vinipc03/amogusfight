@@ -56,10 +56,19 @@ const player = new Fighter({
             framesMax : 8,
             
         },
-        runl: { //TESTE
+        runl: { //MOVIMENTAÇÃO PARA ESQUERDA
             imageSrc: './img/samuraiMack/Runl.png',
             framesMax : 8,
             
+        },
+        jump: {
+            imageSrc: './img/samuraiMack/Jump.png',
+            framesMax : 2,
+            
+        },
+        fall: {
+            imageSrc: './img/samuraiMack/Fall.png',
+            framesMax : 2,
         }
 
     }
@@ -119,13 +128,24 @@ function animate() { //função que cria animações e põe coisas na tela
     enemy.velocity.x = 0
     
     //MOVIMENTAÇÃO DO JOGADOR
-    player.image = player.sprites.idle.image
+    
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5 
-        player.image = player.sprites.runl.image //movimentação para esquerda
+        player.switchSprite('runl')
+        // player.image = player.sprites.runl.image //movimentação para esquerda
     }else if(keys.d.pressed && player.lastKey === 'd'){
         player.velocity.x = 5
-        player.image = player.sprites.run.image //movimentação para direita
+        player.switchSprite('run')
+        //player.image = player.sprites.run.image //movimentação para direita
+    } else {
+        player.switchSprite('idle')
+    }
+
+    // PULO
+    if (player.velocity.y < 0) {
+        player.switchSprite('jump')
+    } else if (player.velocity.y > 0){
+        player.switchSprite('fall')
     }
 
     //MOVIMENTAÇÃO DO INIMIGO
