@@ -74,7 +74,14 @@ const player = new Fighter({
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax : 6,
         }
-
+    },
+    attackBox: {
+        offset: {
+            x: 100,
+            y: 50
+        },
+        width: 150,
+        height: 50
     }
 })
 
@@ -91,6 +98,50 @@ const enemy = new Fighter({
     offset: {
         x: -50,
         y: 0
+    },
+    imageSrc: './img/kenji/Idle.png',
+    framesMax: 4,
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 167
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/kenji/Idle.png',
+            framesMax : 4
+        },
+        run: {
+            imageSrc: './img/kenji/Run.png',
+            framesMax : 8,
+            
+        },
+        runr: { //MOVIMENTAÇÃO PARA DIREITA
+            imageSrc: './img/kenji/Runr.png',
+            framesMax : 8,
+            
+        },
+        jump: {
+            imageSrc: './img/kenji/Jump.png',
+            framesMax : 2,
+            
+        },
+        fall: {
+            imageSrc: './img/kenji/Fall.png',
+            framesMax : 2,
+        },
+        attack1: {
+            imageSrc: './img/kenji/Attack1.png',
+            framesMax : 4,
+        }
+    },
+    attackBox: {
+        offset: {
+            x: -150,
+            y: 50
+        },
+        width: 150,
+        height: 50
     }
 })
 
@@ -126,7 +177,7 @@ function animate() { //função que cria animações e põe coisas na tela
     background.update()
     shop.update()
     player.update()
-    //enemy.update()
+    enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
@@ -155,8 +206,19 @@ function animate() { //função que cria animações e põe coisas na tela
     //MOVIMENTAÇÃO DO INIMIGO
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5
+        enemy.switchSprite('run')
     }else if(keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight'){
         enemy.velocity.x = 5
+        enemy.switchSprite('runr')
+    } else {
+        enemy.switchSprite('idle')
+    }
+
+    // PULO INIMIGO
+    if (enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if (enemy.velocity.y > 0){
+        enemy.switchSprite('fall')
     }
 
     // DETECÇÃO DE COLISÃO
@@ -165,11 +227,16 @@ function animate() { //função que cria animações e põe coisas na tela
             retangle1: player,
             retangle2: enemy
         }) &&
-        player.isAttaking) {
+        player.isAttaking && player.framesCurrent === 4) {
         player.isAttaking = false
         enemy.health -= 20
         document.querySelector('#vidaInimigo').style.width = enemy.health + '%'
         console.log('ataque do jogador');
+    }
+
+    // SE O JOGADOR ERRA
+    if (player.isAttaking && player.framesCurrent ===4) {
+        player.isAttaking = false
     }
 
     if ( 
@@ -177,11 +244,16 @@ function animate() { //função que cria animações e põe coisas na tela
             retangle1: enemy,
             retangle2: player
         }) &&
-        enemy.isAttaking) {
+        enemy.isAttaking && enemy.framesCurrent === 2) {
         enemy.isAttaking = false
         document.querySelector('#vidaJogador').style.width = player.health + '%'
         player.health -= 20
         console.log('ataque do inimigo');
+    }
+
+    // SE O INIMIGO ERRA
+    if (enemy.isAttaking && enemy.framesCurrent ===2) {
+        enemy.isAttaking = false
     }
 
     // finalizar o jogo baseado na vida dos personagens
@@ -211,7 +283,6 @@ window.addEventListener('keydown', (event) => {
         case ' ':
             player.attack()
             break
-
         case 'ArrowRight':
             keys.ArrowRight.pressed = true
             enemy.lastKey = 'ArrowRight'
@@ -240,10 +311,6 @@ window.addEventListener('keyup', (event) => {
         case 'w':
             keys.w.pressed = false
             break
-    }
-
-    //teclas do inimigo
-    switch (event.key) {
         case 'ArrowRight':
             keys.ArrowRight.pressed = false
         break
