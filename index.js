@@ -73,6 +73,10 @@ const player = new Fighter({
         attack1: {
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax : 6,
+        },
+        takeHit: {
+            imageSrc: './img/samuraiMack/Take Hit.png',
+            framesMax : 4,
         }
     },
     attackBox: {
@@ -113,26 +117,28 @@ const enemy = new Fighter({
         },
         run: {
             imageSrc: './img/kenji/Run.png',
-            framesMax : 8,
-            
+            framesMax : 8     
         },
         runr: { //MOVIMENTAÇÃO PARA DIREITA
             imageSrc: './img/kenji/Runr.png',
-            framesMax : 8,
+            framesMax : 8
             
         },
         jump: {
             imageSrc: './img/kenji/Jump.png',
-            framesMax : 2,
-            
+            framesMax : 2
         },
         fall: {
             imageSrc: './img/kenji/Fall.png',
-            framesMax : 2,
+            framesMax : 2
         },
         attack1: {
             imageSrc: './img/kenji/Attack1.png',
-            framesMax : 4,
+            framesMax : 4
+        },
+        takeHit: {
+            imageSrc: './img/kenji/Take hit.png',
+            framesMax: 3
         }
     },
     attackBox: {
@@ -221,17 +227,17 @@ function animate() { //função que cria animações e põe coisas na tela
         enemy.switchSprite('fall')
     }
 
-    // DETECÇÃO DE COLISÃO
+    // DETECÇÃO DE COLISÃO & INIMIGO LEVANDO GOLPE
     if ( 
         retangularCollision({
             retangle1: player,
             retangle2: enemy
         }) &&
         player.isAttaking && player.framesCurrent === 4) {
+        enemy.takeHit()
         player.isAttaking = false
-        enemy.health -= 20
         document.querySelector('#vidaInimigo').style.width = enemy.health + '%'
-        console.log('ataque do jogador');
+        //console.log('ataque do jogador');
     }
 
     // SE O JOGADOR ERRA
@@ -239,16 +245,19 @@ function animate() { //função que cria animações e põe coisas na tela
         player.isAttaking = false
     }
 
+    // QUANDO O JOGADOR LEVA UM GOLPE
+
+
     if ( 
         retangularCollision({
             retangle1: enemy,
             retangle2: player
         }) &&
         enemy.isAttaking && enemy.framesCurrent === 2) {
+        player.takeHit()
         enemy.isAttaking = false
         document.querySelector('#vidaJogador').style.width = player.health + '%'
-        player.health -= 20
-        console.log('ataque do inimigo');
+        //console.log('ataque do inimigo');
     }
 
     // SE O INIMIGO ERRA
