@@ -85,7 +85,7 @@ const player = new Fighter({
             x: 100,
             y: 50
         },
-        width: 150,
+        width: 100,
         height: 50
     }
 })
@@ -109,7 +109,7 @@ const enemy = new Fighter({
     scale: 2.5,
     offset: {
         x: 215,
-        y: 167
+        y: 150
     },
     sprites: {
         idle: {
@@ -135,7 +135,7 @@ const enemy = new Fighter({
         },
         attack1: {
             imageSrc: './img/kenji/Attack1.png',
-            framesMax : 4
+            framesMax : 6
         },
         takeHit: {
             imageSrc: './img/kenji/Take hit.png',
@@ -151,7 +151,7 @@ const enemy = new Fighter({
             x: -150,
             y: 50
         },
-        width: 150,
+        width: 120,
         height: 50
     }
 })
@@ -259,7 +259,7 @@ function animate() { //função que cria animações e põe coisas na tela
             retangle1: enemy,
             retangle2: player
         }) &&
-        enemy.isAttaking && enemy.framesCurrent === 2) {
+        enemy.isAttaking && enemy.framesCurrent === 4) {
         player.takeHit()
         enemy.isAttaking = false 
         gsap.to('#vidaJogador', {
@@ -268,7 +268,7 @@ function animate() { //função que cria animações e põe coisas na tela
     }
 
     // SE O INIMIGO ERRA
-    if (enemy.isAttaking && enemy.framesCurrent ===2) {
+    if (enemy.isAttaking && enemy.framesCurrent ===4) {
         enemy.isAttaking = false
     }
 

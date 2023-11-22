@@ -13,9 +13,9 @@ function determineWinner({player, enemy, timerId}) {
     if (player.health === enemy.health){
         document.querySelector('#displayText').innerHTML = 'EMPATE'
     } else if (player.health > enemy.health) {
-        document.querySelector('#displayText').innerHTML = 'JOGADOR 1 VENCEU'
+        document.querySelector('#displayText').innerHTML = 'TRIPULANTE 1 VENCEU'
     } else if (enemy.health > player.health) {
-        document.querySelector('#displayText').innerHTML = 'JOGADOR 2 VENCEU'
+        document.querySelector('#displayText').innerHTML = 'IMPOSTOR VENCEU'
     }
 }
 
