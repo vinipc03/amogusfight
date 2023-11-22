@@ -49,7 +49,7 @@ const player = new Fighter({
     sprites: {
         idle: {
             imageSrc: './img/samuraiMack/Idle.png',
-            framesMax : 8
+            framesMax : 4
         },
         run: {
             imageSrc: './img/samuraiMack/Run.png',
@@ -73,11 +73,11 @@ const player = new Fighter({
         },
         takeHit: {
             imageSrc: './img/samuraiMack/Take Hit.png',
-            framesMax : 4
+            framesMax : 3
         },
         death: {
             imageSrc: './img/samuraiMack/Death.png',
-            framesMax : 6
+            framesMax : 7
         }
     },
     attackBox: {
