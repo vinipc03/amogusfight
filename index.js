@@ -187,11 +187,31 @@ function animate() { //função que cria animações e põe coisas na tela
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
     shop.update()
+    c.fillStyle = 'rgba(255, 255, 255, 0.15)'
+    c.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
     enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
+
+    //MOVIMENTAÇÃO DO INIMIGO
+    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -5
+        enemy.switchSprite('run')
+    }else if(keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight'){
+        enemy.velocity.x = 5
+        enemy.switchSprite('runr')
+    } else {
+        enemy.switchSprite('idle')
+    }
+
+    // PULO INIMIGO
+    if (enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if (enemy.velocity.y > 0){
+        enemy.switchSprite('fall')
+    }
     
     //MOVIMENTAÇÃO DO JOGADOR
     
@@ -214,24 +234,6 @@ function animate() { //função que cria animações e põe coisas na tela
         player.switchSprite('fall')
     }
 
-    //MOVIMENTAÇÃO DO INIMIGO
-    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5
-        enemy.switchSprite('run')
-    }else if(keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight'){
-        enemy.velocity.x = 5
-        enemy.switchSprite('runr')
-    } else {
-        enemy.switchSprite('idle')
-    }
-
-    // PULO INIMIGO
-    if (enemy.velocity.y < 0) {
-        enemy.switchSprite('jump')
-    } else if (enemy.velocity.y > 0){
-        enemy.switchSprite('fall')
-    }
-
     // DETECÇÃO DE COLISÃO & INIMIGO LEVANDO GOLPE
     if ( 
         retangularCollision({
@@ -241,7 +243,8 @@ function animate() { //função que cria animações e põe coisas na tela
         player.isAttaking && player.framesCurrent === 4) {
         enemy.takeHit()
         player.isAttaking = false
-        document.querySelector('#vidaInimigo').style.width = enemy.health + '%'
+        gsap.to('#vidaInimigo', {
+            width: enemy.health + '%'})
         //console.log('ataque do jogador');
     }
 
@@ -258,8 +261,9 @@ function animate() { //função que cria animações e põe coisas na tela
         }) &&
         enemy.isAttaking && enemy.framesCurrent === 2) {
         player.takeHit()
-        enemy.isAttaking = false
-        document.querySelector('#vidaJogador').style.width = player.health + '%'
+        enemy.isAttaking = false 
+        gsap.to('#vidaJogador', {
+            width: player.health + '%'})
         //console.log('ataque do inimigo');
     }
 
